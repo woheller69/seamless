@@ -25,6 +25,8 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.seamless.asr.RecordBuffer;
 import com.seamless.asr.Recorder;
+import com.seamless.utils.HapticFeedback;
+
 import org.pytorch.IValue;
 import org.pytorch.LiteModuleLoader;
 import org.pytorch.Module;
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private File sdcardDataFolder = null;
     private File selectedTfliteFile = null;
     private Module module;
+    private Context mContext;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
 
@@ -67,8 +70,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
         setContentView(R.layout.activity_main);
-
 
         // Initialize default model to use
         sdcardDataFolder = this.getExternalFilesDir(null);
@@ -85,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 // Pressed
                 Log.d(TAG, "Start recording...");
                 resetLanguageButtons();
+                HapticFeedback.vibrate(mContext);
                 startRecording();
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                 // Released
@@ -178,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
                     handler.post(() -> tvResult.setText(""));
                     handler.post(() -> btnRecord.setBackgroundResource(R.drawable.rounded_button_background_pressed));
                 } else if (message.equals(Recorder.MSG_RECORDING_DONE)) {
+                    HapticFeedback.vibrate(mContext);
                     handler.post(() -> btnRecord.setBackgroundResource(R.drawable.rounded_button_background));
                 }
             }
