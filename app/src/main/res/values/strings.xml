@@ -17,4 +17,6 @@
     <string name="hindi">Hin</string>
     <string name="russian">Rus</string>
     <string name="copy">Copy</string>
+    <string name="tts_language_not_supported">TTS: Language not supported</string>
+    <string name="tts_initialization_failed">TTS: Initialization failed</string>
 </resources>

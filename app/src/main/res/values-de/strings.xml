@@ -17,4 +17,6 @@
     <string name="hindi">Hin</string>
     <string name="russian">Rus</string>
     <string name="copy">Kopieren</string>
+    <string name="tts_language_not_supported">Sprachausgabe: Sprache nicht unterstützt</string>
+    <string name="tts_initialization_failed">Sprachausgabe: Initialisierung fehlgeschlagen</string>
 </resources>

@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Button;
@@ -33,6 +34,7 @@ import org.pytorch.Module;
 import org.pytorch.Tensor;
 import java.io.File;
 import java.nio.FloatBuffer;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private File selectedTfliteFile = null;
     private Module module;
     private Context mContext;
+    private TextToSpeech tts;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
 
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy(){
         if (module != null) module.destroy();
+        deinitTTS();
         super.onDestroy();
     }
     @SuppressLint("ClickableViewAccessibility")
@@ -72,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mContext = this;
         setContentView(R.layout.activity_main);
-
         // Initialize default model to use
         sdcardDataFolder = this.getExternalFilesDir(null);
         selectedTfliteFile = new File(sdcardDataFolder, DEFAULT_MODEL_TO_USE);
@@ -109,8 +112,8 @@ public class MainActivity extends AppCompatActivity {
             }
             resetLanguageButtons();
             btnTransEng.setBackgroundResource(R.drawable.rounded_button_background_pressed);
+            initTTS(new Locale("en"));
             startTranslation("eng");
-
         });
 
         btnTransSpa = findViewById(R.id.btnTransSpa);
@@ -121,8 +124,8 @@ public class MainActivity extends AppCompatActivity {
             }
             resetLanguageButtons();
             btnTransSpa.setBackgroundResource(R.drawable.rounded_button_background_pressed);
+            initTTS(new Locale("es"));
             startTranslation("spa");
-
         });
 
         btnTransPor = findViewById(R.id.btnTransPor);
@@ -133,8 +136,8 @@ public class MainActivity extends AppCompatActivity {
             }
             resetLanguageButtons();
             btnTransPor.setBackgroundResource(R.drawable.rounded_button_background_pressed);
+            initTTS(new Locale("pt"));
             startTranslation("por");
-
         });
 
         btnTransHin = findViewById(R.id.btnTransHin);
@@ -145,8 +148,8 @@ public class MainActivity extends AppCompatActivity {
             }
             resetLanguageButtons();
             btnTransHin.setBackgroundResource(R.drawable.rounded_button_background_pressed);
+            initTTS(new Locale("hi"));
             startTranslation("hin");
-
         });
 
         btnTransRus = findViewById(R.id.btnTransRus);
@@ -157,8 +160,8 @@ public class MainActivity extends AppCompatActivity {
             }
             resetLanguageButtons();
             btnTransRus.setBackgroundResource(R.drawable.rounded_button_background_pressed);
+            initTTS(new Locale("ru"));
             startTranslation("rus");
-
         });
 
         tvResult = findViewById(R.id.tvResult);
@@ -234,6 +237,7 @@ public class MainActivity extends AppCompatActivity {
                 String text = outputs.toStr();
                 runOnUiThread(() -> {
                     tvResult.setText(text);
+                    if (tts!=null) tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
                     processingBar.setIndeterminate(false);
                 });
                 Log.d("Output","Inference output: " + text);
@@ -294,4 +298,28 @@ public class MainActivity extends AppCompatActivity {
         btnTransHin.setBackgroundResource(R.drawable.rounded_button_background);
         btnTransRus.setBackgroundResource(R.drawable.rounded_button_background);
     }
+
+    private void deinitTTS(){
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
+    }
+    private void initTTS(Locale locale){
+        tts = new TextToSpeech(mContext, status -> {
+            if (status == TextToSpeech.SUCCESS) {
+                int result = tts.setLanguage(locale);
+                if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                    tts = null;
+                    runOnUiThread(() -> {
+                        Toast.makeText(mContext, mContext.getString(R.string.tts_language_not_supported),Toast.LENGTH_SHORT).show();
+                    });
+                }
+            } else {
+                tts = null;
+                runOnUiThread(() -> Toast.makeText(mContext, " Status: " + status + " " + mContext.getString(R.string.tts_initialization_failed),Toast.LENGTH_SHORT).show());
+            }
+        });
+    }
+
 }
