@@ -5,14 +5,14 @@ plugins {
 
 android {
     namespace 'com.seamless'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "org.woheller69.seemless"
         minSdk 28
-        targetSdk 34
-        versionCode 15
-        versionName "1.5"
+        targetSdk 35
+        versionCode 16
+        versionName "1.6"
     }
 
     buildFeatures {

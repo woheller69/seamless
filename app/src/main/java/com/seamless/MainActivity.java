@@ -27,6 +27,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.seamless.asr.RecordBuffer;
 import com.seamless.asr.Recorder;
 import com.seamless.utils.HapticFeedback;
+import com.seamless.utils.ThemeUtils;
 
 import org.pytorch.IValue;
 import org.pytorch.LiteModuleLoader;
@@ -76,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mContext = this;
         setContentView(R.layout.activity_main);
+        ThemeUtils.setStatusBarAppearance(this);
         // Initialize default model to use
         sdcardDataFolder = this.getExternalFilesDir(null);
         selectedTfliteFile = new File(sdcardDataFolder, DEFAULT_MODEL_TO_USE);

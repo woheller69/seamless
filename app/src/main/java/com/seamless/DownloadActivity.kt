@@ -6,6 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.seamless.databinding.ActivityDownloadBinding
 import com.seamless.utils.Downloader
+import com.seamless.utils.ThemeUtils
 
 class DownloadActivity  : AppCompatActivity() {
     private var binding: ActivityDownloadBinding? = null
@@ -13,6 +14,7 @@ class DownloadActivity  : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDownloadBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
+        ThemeUtils.setStatusBarAppearance(this)
     }
 
     override fun onResume() {
