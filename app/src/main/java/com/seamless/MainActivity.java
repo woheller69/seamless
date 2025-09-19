@@ -19,7 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
+import org.woheller69.freeDroidWarn.FreeDroidWarn;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -208,6 +208,7 @@ public class MainActivity extends AppCompatActivity {
                 else finish();
             }
         });
+        FreeDroidWarn.showWarningOnUpgrade(this, BuildConfig.VERSION_CODE);
         if (GithubStar.shouldShowStarDialog(this)) GithubStar.starDialog(this, "https://github.com/woheller69/seamless");
         checkRecordPermission();
 
